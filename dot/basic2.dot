@@ -1,0 +1,11 @@
+digraph g {
+    {
+        decision [margin=0 shape=box]
+        decision2 [margin=0 label="decision (edited)" shape=box]
+        build2 [margin=0 label="build (edited)"]
+        build3 [margin=0 label="build (arbitrary)"]
+    }
+    user -> {decision, decision2, build3}
+    decision -> {build}
+    decision2 -> {build2}
+}

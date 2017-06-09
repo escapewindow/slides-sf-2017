@@ -1,0 +1,12 @@
+digraph g {
+    {
+        decision [margin=0 shape=box]
+        decision2 [margin=0 label="docker-image decision" shape=box]
+        docker [margin=0 label="docker-image"]
+    }
+    tree -> {decision, decision2} [dir="back"] [dir="back"];
+    decision -> {build} [dir="back"];
+    decision2 -> {docker} [dir="back"];
+    docker -> {build} [dir="back"];
+    build -> signing [dir="back"];
+}
