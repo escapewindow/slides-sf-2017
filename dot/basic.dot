@@ -1,0 +1,6 @@
+digraph g {
+    {
+        decision [margin=0 shape=box]
+    }
+    decision -> build
+}

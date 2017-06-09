@@ -1,0 +1,20 @@
+digraph g {
+    {
+        decision [margin=0 shape=box]
+        decision2 [margin=0 label="docker-image decision" shape=box]
+        docker [margin=0 label="docker-image"]
+        beetmover2 [margin=0 label="beetmover-checksums"]
+        signing2 [margin=0 label="l10n signing"]
+        signing3 [margin=0 label="beetmover-checksums-signing"]
+    }
+    tree -> {decision, decision2} [dir="back"] [dir="back"];
+    decision -> {build} [dir="back"];
+    decision2 -> {docker} [dir="back"];
+    docker -> {build} [dir="back"];
+    build -> {signing, l10n} [dir="back"];
+    signing -> {beetmover, balrog, l10n} [dir="back"];
+    l10n -> signing2 [dir="back"]
+    signing2 -> {beetmover, balrog} [dir="back"];
+    beetmover -> signing3 [dir="back"];
+    signing3 -> beetmover2 [dir="back"];
+}
