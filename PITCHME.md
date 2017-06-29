@@ -169,10 +169,10 @@ After the task finishes, the worker
 
 GPG keys
 
-- keypairs are valid per workerType
+- keypairs are valid per worker impl
 - valid keys for level3 only
 - allow us to verify valid chain of trust artifacts
-- 4 gpg homedirs allow us to have different trust models between workerTypes
+- 4 gpg homedirs allow us to have different trust models between worker impls
 
 ---
 
@@ -994,7 +994,6 @@ Restricted scopes
             # to have the scopes to ship to this product.
             # https://bugzilla.mozilla.org/show_bug.cgi?id=1357808 has additional
             # background and discussion.
-            'project:releng:googleplay:aurora': 'nightly',
             'project:releng:beetmover:bucket:nightly': 'all-nightly-branches',
             'project:releng:signing:cert:nightly-signing': 'all-nightly-branches',
         })
@@ -1007,10 +1006,8 @@ Restricted scopes
             # XXX remove /projects/jamun when we no longer release firefox
             #     from it
             'all-release-branches': (
-                "/releases/mozilla-aurora",
                 "/releases/mozilla-beta",
                 "/releases/mozilla-release",
-                "/releases/mozilla-esr45",
                 "/releases/mozilla-esr52",
                 "/projects/jamun",
             ),
@@ -1041,10 +1038,8 @@ Restricted scopes
             'all-nightly-branches': (
                 "/mozilla-central",
                 "/releases/mozilla-unified",
-                "/releases/mozilla-aurora",
                 "/releases/mozilla-beta",
                 "/releases/mozilla-release",
-                "/releases/mozilla-esr45",
                 "/releases/mozilla-esr52",
                 "/projects/jamun",
                 "/projects/oak",
