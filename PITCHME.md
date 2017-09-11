@@ -2,6 +2,10 @@
 ## Releng Tech Talk
 ### Sep 2017
 
+Note:
+- I'm going to talk about the chain of trust.
+- Hopefully the talk will take 10-15 minutes, and we'll have time for questions afterwards.
+
 ---
 
 ## Taskcluster
@@ -11,6 +15,7 @@
 - security challenge
 
 Note:
+- We use Taskcluster for our automation.
 - Taskcluster is massively scalable... We spin up about 10 million worker instances per year.
 - It's self serve, which allows developers to push all their changes without being blocked by releng.
 - By its nature, it presents a security challenge for releases.
@@ -19,55 +24,51 @@ Note:
 
 ## Taskcluster scopes
 
-Permissions to trigger valid task == permissions to trigger arbitrary task
-
-Note:
-- Scopes are Taskcluster's permissions model.
-- If you have the scopes to trigger a valid task, you have the scopes to trigger an arbitrary or malicious task. It's all the same to Taskcluster.
-
----
-
-## Chain of Trust
-
-- A way to trace a request back to the tree.
-- A <a href="https://en.wikipedia.org/wiki/Multi-factor_authentication#Possession_factors">second factor</a>, based on something the worker has.
-
-Note:
-- The chain of trust is a way to trace a request back to the tree.
-- The chain of trust is a second factor, based on something the worker has.
-
----
-
-When you push to the tree, the decision task creates a task graph.
-
-A super-minimal example task graph containing a single build:
-
-![basic](img/basic.png)
-
----
-
-If you have the scopes to trigger or retrigger an official task graph, you also have the scopes to trigger any arbitrary task with the same permissions.
+- taskcluster's permissions model
+- scopes allow for arbitrary graphs
 
 ![basic2](img/basic2.png)
 
+Note:
+- If you have the scopes to trigger or retrigger an official task graph, you also have the scopes to trigger any arbitrary task or graph with the same permissions.
+- The left hand side represents an official graph.
+- The middle represents a well-formed graph, where I've modified the decision task, so the build is now modified.
+- The right hand side represents an arbitrary build that I've submitted directly.
+- Scopes allow for all of these scenarios. For taskcluster, there is no authoritative official release process; only conventions.
+
 ---
 
-We want to allow this flexibility in general, but restrict release tasks.
+We want to
+
+- allow this flexibility in general
+- restrict release tasks.
+
+Note:
+- Taskcluster's flexibility is its strength. Let's only restrict its behavior for release tasks.
 
 ---
 
-How do we trust Taskcluster for sensitive processes and secrets?
+Sensitive processes:
 
-- the secrets must be protected by more than just scopes
+- secrets must be protected by more than just scopes
+- disallow arbitrary actions
 - we need to know the request is valid (trace back to tree)
 
+Note:
+- Protecting secrets in taskcluster secrets means a scopes compromise can compromise the secrets. We need to do more than that.
+- Arbitrary actions puts those secrets at risk. They can also allow for signing or shipping arbitrary files.
+- Verifying the request comes from a trusted tree means we secure the automation that comes after a push.
+
 ---
 
-Protecting secrets: scriptworker
+Protecting secrets, limiting actions: scriptworker
 
 - under releng control
 - static/limited abilities (no bash scripts in task definitions)
-- verifies request validity before proceeding
+- verifies request validity before proceeding (chain of trust)
+
+Note:
+- Scriptworker is designed to handle these sensitive tasks. First, it secures secrets on protected instances, and limits the logic of what can be run. There are no arbitrary bash scripts in the task definition.
 
 ---
 
@@ -77,11 +78,8 @@ Request validity: Chain of Trust
 - hg.m.o security is a separate problem
 - trace the request back to the tree via the chain of trust
 
----
-
-What is the chain of trust?
-
-A way to trace a request back to the tree.
+Note:
+- We assume that hg.m.o is secure; other teams are handling that problem. We're handling the security from hg.m.o through release; to do so, we trace the request back to a trusted tree.
 
 ---
 
@@ -91,6 +89,10 @@ Attack vectors
 - malicious docker image
 - alter artifacts at rest
 - alter pointers to artifacts, like moving softlinks
+
+Note:
+- There are two main ways to attack our release processes on taskcluster.
+- Arbitrary task definitions, or altered artifacts.
 
 ---
 
