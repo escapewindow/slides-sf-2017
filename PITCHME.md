@@ -168,17 +168,40 @@ Trace back to the tree
 
 ---
 
-## Recent changes
+## Limitations (Sep2017)
+
+- retriggers
+
+Note:
+- currently, retriggers work for the retriggered task, but downstream tasks will fail cot verification. once bstack refactors retrigger action tasks, we should be able to fix this.
 
 ---
 
-The decision task is key.
+## Recent changes (Sep2017)
 
-In CoT v2, we will
+- cot can now verify action tasks
+- `verify_cot` can now verify any cot-verifiable task
 
-- simplify the decision task by embedding more logic in the docker image
-- verify the decision task came from the tree - including docker shas, workerType, etc (eyaml)
-- simplify downstream task verification
+`verify_cot --task-type decision --cleanup -- Q7ZGZjRjR52X8bsbN_5dGA`
+
+Note:
+- We now have the ability to verify certain action tasks... "add tasks" in treeherder. bstack is rewriting these actions, so we'll revisit again when that's done. Action tasks allow for json input, which would let us automate all sorts of things.
+- We used to only be able to use `verify_cot` to verify scriptworker tasks. Now the commandline tool works on any cot-verifiable task.
+
+---
+
+## Upcoming changes (Sep2017)
+
+- json-e (cot v2)
+- finish verification of action tasks
+- graph 2 depending on graph 1 (pending review)
+- audit / architectural review
+
+Note:
+- json-e will let us rebuild the decision task from the tree, rather than eyeball it and make sure it looks ok. it'll let us simplify our verification logic. i have a wip patch for this that needs some more work.
+- once we have full action task verification, we can define most of our automation in-tree, cot verifiable
+- the `previous_graph_ids` and `previous_graph_kinds` patch will let us base one graph on another graph, or n upstream graphs.
+- we definitely need an audit and architectural review. if this is our best solution, let's harden it and streamline it. if it isn't, let's replace it with something better.
 
 ---
 
@@ -186,3 +209,4 @@ In CoT v2, we will
 
 - [More in-depth slides from the all-hands](https://gitpitch.com/escapewindow/slides-sf-2017/cot)
 - [More docs](http://scriptworker.readthedocs.io/en/latest/chain_of_trust.html)
+- [Previous tech talk](https://public.etherpad-mozilla.org/p/aki-tech-topics-chain-of-trust)
