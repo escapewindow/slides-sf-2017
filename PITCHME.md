@@ -22,19 +22,17 @@ Note:
 
 ---
 
-## Taskcluster scopes
-
-- taskcluster's permissions model
-- scopes allow for arbitrary graphs
+- For taskcluster, there are no official graphs
+- Taskcluster scopes allow for arbitrary tasks of the same type
 
 ![basic2](img/basic2.png)
 
 Note:
-- If you have the scopes to trigger or retrigger an official task graph, you also have the scopes to trigger any arbitrary task or graph with the same permissions.
-- The left hand side represents an official graph.
+- If you have the scopes to trigger an official task graph, you can also trigger any arbitrary task or graph of the same type.
+- The left hand side represents an official graph. Someone pushes to the tree, we create a decision task that creates an official build.
 - The middle represents a well-formed graph, where I've modified the decision task, so the build is now modified.
 - The right hand side represents an arbitrary build that I've submitted directly.
-- Scopes allow for all of these scenarios. For taskcluster, there is no authoritative official release process; only conventions.
+- Taskcluster has no concept of "official" graphs. There are only well formed tasks and conventions.
 
 ---
 
